@@ -1,0 +1,1 @@
+export const AMOUNT_DECIMAL = 100000000

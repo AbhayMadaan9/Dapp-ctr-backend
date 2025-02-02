@@ -1,13 +1,13 @@
 import {Router} from "express"
-import {  createTaskController, getNextTaskController, getTaskController, workerGeneratePreSignedInUrlController, workerSignInController } from "./worker.controller";
+import { getNextTaskController, workerSignInController, createSubmissionsController, getBalanceController, createPayoutController } from "./worker.controller";
 import { authMiddlware } from "../common/middlewares/auth.middleware";
 
 const router = Router();
 
 
-router.get("/task",authMiddlware, getNextTaskController)
 
-router.get("/nextTask",authMiddlware, createTaskController)
+router.get("/nextTask",authMiddlware, getNextTaskController)
+router.post("/submissions",authMiddlware, createSubmissionsController)
+router.get("/balance",authMiddlware, getBalanceController)
+router.post("/payout",authMiddlware, createPayoutController)
 router.post("/signin", workerSignInController)
-router.post("/presignedurl",authMiddlware, workerGeneratePreSignedInUrlController)
-router.post("/task",authMiddlware, createTaskController)

@@ -1,8 +1,6 @@
 import z from "zod"
-export const createTaskValidation = z.object({
-    options: z.array(z.object({
-        imageUrl: z.string()
-    })),
-    title: z.string().optional(),signature: z.string(),
+export const createSubmissionValidation = z.object({
+    taskId: z.string(),
+    selection: z.string(),
 
 })
