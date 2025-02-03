@@ -19,8 +19,8 @@ export const authMiddlware = (publicRoutes: string[] = []) =>
                 });
             }
 
-            const decodedUser = jwt.verify(token, process.env.JWT_SECRET!);
-            req.userId = decodedUser as string;
+            const decodedUser = jwt.verify(token, process.env.JWT_SECRET!) as { userId: number };
+            req.userId = decodedUser.userId as number;
 
             next();
         },

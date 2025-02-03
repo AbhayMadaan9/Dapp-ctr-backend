@@ -11,3 +11,5 @@ router.post("/submissions",authMiddlware, createSubmissionsController)
 router.get("/balance",authMiddlware, getBalanceController)
 router.post("/payout",authMiddlware, createPayoutController)
 router.post("/signin", workerSignInController)
+
+export default router;

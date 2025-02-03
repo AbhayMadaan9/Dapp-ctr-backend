@@ -3,9 +3,25 @@ import jwt from "jsonwebtoken"
 import { createTask, createUser, findUser } from "./user.service";
 import { generatePresignedUrl } from "../common/services/aws.service";
 import { createTaskValidation } from "./user.validation";
+import nacl from "tweetnacl";
+import { PublicKey } from "@solana/web3.js";
 export async function userSignInController(req: Request, res: Response) {
-    const hardcodedAddress = "0x2546BcD3c84621e976D8185a91A922aE77ECEc30";
-    const existingUser = await findUser(hardcodedAddress);
+    const {signature, publicKey} = req.body;
+    console.log('publicKey: ', publicKey);
+    console.log('signature: ', signature);
+    if(!publicKey)
+    {
+        return;
+    }
+    const message =  new TextEncoder()?.encode("SignUp/SignIn message");
+    const result = nacl.sign.detached.verify(message, new Uint8Array(signature.data), new PublicKey(publicKey).toBytes());
+    if (!result) {
+        return res.status(411).json({
+            message: "Incorrect signature"
+        })
+    }
+    
+    const existingUser = await findUser(publicKey);
     const jwt_secret = process.env.JWT_SECRET ?? "secret"
     if (existingUser) {
         const token = jwt.sign({
@@ -16,7 +32,7 @@ export async function userSignInController(req: Request, res: Response) {
         })
     }
     else {
-        const user = await createUser({ address: hardcodedAddress })
+        const user = await createUser({ address: publicKey })
         const token = jwt.sign({
             userId: user.id
         }, jwt_secret);
